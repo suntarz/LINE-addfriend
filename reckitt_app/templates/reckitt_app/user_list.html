@@ -1,0 +1,162 @@
+<!-- reckitt_app/templates/reckitt_app/user_list.html -->
+{% extends 'reckitt_app/base.html' %}
+{% block title %}รายชื่อผู้ใช้ LINE{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-users me-2"></i> รายชื่อผู้ใช้ LINE</h5>
+        <a href="{% url 'reckitt_app:user_create' %}" class="btn btn-light btn-sm">
+            <i class="fas fa-plus-circle me-1"></i> เพิ่มผู้ใช้
+        </a>
+    </div>
+    <div class="card-body">
+        <!-- Search form -->
+        <form class="row mb-4">
+            <div class="col-md-10">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="ค้นหาชื่อ, LINE ID, รหัสพนักงาน..." value="{{ request.GET.q|default:'' }}">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search me-1"></i> ค้นหา
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <select name="department" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- แผนกทั้งหมด --</option>
+                    {% for dept in departments %}
+                        <option value="{{ dept }}" {% if request.GET.department == dept %}selected{% endif %}>{{ dept }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+        
+        <!-- Users Table -->
+        {% if users %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>รูปโปรไฟล์</th>
+                            <th>ชื่อที่แสดง</th>
+                            <th>ชื่อ-สกุล</th>
+                            <th>รหัสพนักงาน</th>
+                            <th>แผนก</th>
+                            <th>เพิ่มเป็นเพื่อนเมื่อ</th>
+                            <th>จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td class="text-center">
+                                    {% if user.picture_url %}
+                                        <img src="{{ user.picture_url }}" alt="{{ user.display_name }}" class="rounded-circle" width="40" height="40">
+                                    {% else %}
+                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                            <i class="fas fa-user text-secondary"></i>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.display_name }}</td>
+                                <td>
+                                    {% if user.first_name or user.last_name %}
+                                        {{ user.first_name }} {{ user.last_name }}
+                                    {% else %}
+                                        <span class="text-muted">ไม่ระบุ</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if user.employee_id %}
+                                        {{ user.employee_id }}
+                                    {% else %}
+                                        <span class="text-muted">ไม่ระบุ</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if user.department %}
+                                        {{ user.department }}
+                                    {% else %}
+                                        <span class="text-muted">ไม่ระบุ</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.created_at|date:"d M Y H:i" }}</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'reckitt_app:user_detail' user.pk %}" class="btn btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'reckitt_app:user_update' user.pk %}" class="btn btn-outline-secondary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'reckitt_app:user_delete' user.pk %}" class="btn btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            {% if is_paginated %}
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.department %}&department={{ request.GET.department }}{% endif %}">
+                                    <i class="fas fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.department %}&department={{ request.GET.department }}{% endif %}">
+                                    <i class="fas fa-angle-left"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.department %}&department={{ request.GET.department }}{% endif %}">
+                                        {{ num }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.department %}&department={{ request.GET.department }}{% endif %}">
+                                    <i class="fas fa-angle-right"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.department %}&department={{ request.GET.department }}{% endif %}">
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+            
+        {% else %}
+            <div class="text-center p-5">
+                <i class="fas fa-users text-secondary mb-3" style="font-size: 48px;"></i>
+                <h4 class="text-secondary">ไม่พบข้อมูลผู้ใช้</h4>
+                <p class="text-muted">ไม่มีผู้ใช้ LINE ในระบบตามเงื่อนไขที่ค้นหา</p>
+                <a href="{% url 'reckitt_app:user_create' %}" class="btn btn-primary mt-2">
+                    <i class="fas fa-plus-circle me-1"></i> เพิ่มผู้ใช้ใหม่
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

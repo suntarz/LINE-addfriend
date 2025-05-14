@@ -1,0 +1,130 @@
+<!-- reckitt_app/templates/reckitt_app/user_form.html -->
+{% extends 'reckitt_app/base.html' %}
+{% block title %}{% if user %}แก้ไขข้อมูลผู้ใช้{% else %}เพิ่มผู้ใช้ใหม่{% endif %}{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            {% if user %}
+                <i class="fas fa-edit me-2"></i> แก้ไขข้อมูลผู้ใช้ - {{ user.display_name }}
+            {% else %}
+                <i class="fas fa-user-plus me-2"></i> เพิ่มผู้ใช้ใหม่
+            {% endif %}
+        </h5>
+        <a href="{% if user %}{% url 'reckitt_app:user_detail' user.pk %}{% else %}{% url 'reckitt_app:user_list' %}{% endif %}" class="btn btn-light btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> กลับ
+        </a>
+    </div>
+    <div class="card-body">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            <div class="row">
+                <!-- LINE Info Section -->
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <strong><i class="fab fa-line me-1"></i> ข้อมูล LINE</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="{{ form.line_id.id_for_label }}" class="form-label">LINE ID <span class="text-danger">*</span></label>
+                                {{ form.line_id }}
+                                {% if form.line_id.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.line_id.errors }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">รหัสเฉพาะของผู้ใช้ LINE (ได้รับจาก webhook เมื่อมีการ add friend)</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.display_name.id_for_label }}" class="form-label">ชื่อที่แสดง <span class="text-danger">*</span></label>
+                                {{ form.display_name }}
+                                {% if form.display_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.display_name.errors }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">ชื่อที่แสดงในแอพพลิเคชัน LINE</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.picture_url.id_for_label }}" class="form-label">URL รูปโปรไฟล์</label>
+                                {{ form.picture_url }}
+                                {% if form.picture_url.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.picture_url.errors }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">URL รูปโปรไฟล์ของผู้ใช้ (ได้รับจาก LINE API)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Personal Info Section -->
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <strong><i class="fas fa-user me-1"></i> ข้อมูลส่วนตัว</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="{{ form.first_name.id_for_label }}" class="form-label">ชื่อ</label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.first_name.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.last_name.id_for_label }}" class="form-label">นามสกุล</label>
+                                {{ form.last_name }}
+                                {% if form.last_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.last_name.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.employee_id.id_for_label }}" class="form-label">รหัสพนักงาน</label>
+                                {{ form.employee_id }}
+                                {% if form.employee_id.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.employee_id.errors }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">รหัสพนักงานในระบบบริษัท</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.department.id_for_label }}" class="form-label">แผนก</label>
+                                {{ form.department }}
+                                {% if form.department.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.department.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                <a href="{% if user %}{% url 'reckitt_app:user_detail' user.pk %}{% else %}{% url 'reckitt_app:user_list' %}{% endif %}" class="btn btn-secondary me-md-2">
+                    <i class="fas fa-times me-1"></i> ยกเลิก
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i> บันทึก
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

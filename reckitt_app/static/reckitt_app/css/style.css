@@ -1,0 +1,91 @@
+/* reckitt_app/static/reckitt_app/css/style.css */
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    flex: 1;
+}
+
+/* Custom card styles */
+.card {
+    border: none;
+    margin-bottom: 1.5rem;
+}
+
+.card .card-header {
+    font-weight: 500;
+}
+
+.card-header .badge {
+    font-size: 0.8rem;
+}
+
+.shadow {
+    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .1) !important;
+}
+
+/* Navbar styles */
+.navbar-brand {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Table styles */
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.03);
+}
+
+/* Profile image styles */
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+/* Form styles */
+.form-label {
+    font-weight: 500;
+}
+
+.form-text {
+    font-size: 0.8rem;
+}
+
+.invalid-feedback {
+    display: block;
+}
+
+/* Custom footer */
+footer {
+    margin-top: auto;
+}
+
+/* Alert style */
+.alert {
+    border-radius: 0.25rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Status badges */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .btn-sm-block {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}

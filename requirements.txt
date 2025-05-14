@@ -1,0 +1,5 @@
+django>=3.2,<4.0
+django-mssql-backend>=2.8.1
+pyodbc>=4.0.32
+line-bot-sdk>=2.3.0
+python-dotenv>=0.19.2

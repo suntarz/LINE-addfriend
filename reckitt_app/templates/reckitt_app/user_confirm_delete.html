@@ -1,0 +1,42 @@
+<!-- reckitt_app/templates/reckitt_app/user_confirm_delete.html -->
+{% extends 'reckitt_app/base.html' %}
+{% block title %}ยืนยันการลบผู้ใช้{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            <i class="fas fa-trash-alt me-2"></i> ยืนยันการลบผู้ใช้
+        </h5>
+        <a href="{% url 'reckitt_app:user_detail' user.pk %}" class="btn btn-light btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> กลับ
+        </a>
+    </div>
+    <div class="card-body text-center p-5">
+        {% if user.picture_url %}
+            <img src="{{ user.picture_url }}" alt="{{ user.display_name }}" class="rounded-circle mb-3" width="100" height="100">
+        {% else %}
+            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 100px; height: 100px;">
+                <i class="fas fa-user fa-3x text-secondary"></i>
+            </div>
+        {% endif %}
+        
+        <h4 class="mt-3 mb-4">คุณแน่ใจหรือไม่ว่าต้องการลบ "{{ user.display_name }}"?</h4>
+        <p class="text-muted mb-4">
+            การดำเนินการนี้ไม่สามารถเรียกคืนได้ และข้อมูลผู้ใช้ทั้งหมดจะถูกลบออกจากระบบ
+        </p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <a href="{% url 'reckitt_app:user_detail' user.pk %}" class="btn btn-secondary me-md-2">
+                    <i class="fas fa-times me-1"></i> ยกเลิก
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt me-1"></i> ยืนยันการลบ
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
